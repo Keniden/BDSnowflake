@@ -35,15 +35,6 @@ select
     md5(concat_ws('|', supplier_name, supplier_email, supplier_country)) as supplier_bk
 from mock_data;
 
-insert into dwh.dim_date (date_key, full_date, month_num, year_num)
-select distinct
-    to_char(sale_date, 'YYYYMMDD')::integer,
-    sale_date,
-    extract(month from sale_date)::integer,
-    extract(year from sale_date)::integer
-from src
-where sale_date is not null;
-
 insert into dwh.dim_customer (
     customer_bk,
     source_customer_id,
@@ -130,7 +121,7 @@ order by supplier_bk, source_row_id;
 
 insert into dwh.fact_sales (
     source_row_id,
-    date_key,
+    sale_date,
     customer_key,
     seller_key,
     store_key,
@@ -141,7 +132,7 @@ insert into dwh.fact_sales (
 )
 select
     s.source_row_id,
-    to_char(s.sale_date, 'YYYYMMDD')::integer,
+    s.sale_date,
     c.customer_key,
     se.seller_key,
     st.store_key,

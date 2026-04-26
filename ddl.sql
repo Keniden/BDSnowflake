@@ -8,13 +8,6 @@ drop table if exists dwh.dim_seller;
 drop table if exists dwh.dim_customer;
 drop table if exists dwh.dim_date;
 
-create table dwh.dim_date (
-    date_key integer primary key,
-    full_date date,
-    month_num integer,
-    year_num integer
-);
-
 create table dwh.dim_customer (
     customer_key bigserial primary key,
     customer_bk text,
@@ -65,7 +58,7 @@ create table dwh.dim_supplier (
 create table dwh.fact_sales (
     sale_key bigserial primary key,
     source_row_id bigint,
-    date_key integer references dwh.dim_date(date_key),
+    sale_date date,
     customer_key bigint references dwh.dim_customer(customer_key),
     seller_key bigint references dwh.dim_seller(seller_key),
     store_key bigint references dwh.dim_store(store_key),
